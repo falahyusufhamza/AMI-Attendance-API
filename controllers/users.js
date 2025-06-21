@@ -64,9 +64,9 @@ exports.signIn = async (req, res, next) => {
                         role: user.dataValues.role,
                     }, process.env.JWT_SIGNER);
                     res.cookie('authToken', token, {
-                        httpOnly: false,         // recommended for security
-                        secure: false,          // required for localhost (true only with HTTPS)
-                        sameSite: 'Lax', // helps prevent CSRF attacks 
+                        httpOnly: true,         // recommended for security
+                        secure: true,          // required for localhost (true only with HTTPS)
+                        sameSite: 'None', // helps prevent CSRF attacks 
                           
                         // maxAge: 24 * 60 * 60 * 1000,
                     });
