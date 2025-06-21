@@ -15,20 +15,18 @@ const attendanceRoutes = require("./api/attendance");
 app.use(express.urlencoded({ extended: true }));
 
 // Read and parse the .env file
-const envPath = path.resolve(__dirname, '.env');
-const envVariables = fs.readFileSync(envPath, 'utf-8').split('\n');
-envVariables.forEach(variable => {
-  const [key, value] = variable.split('=');
-  if (key && value) {
-    process.env[key] = value;
-  }
-});
-const origins = [];
-origins.push(process.env.DOMAIN_NAME_1);
-origins.push(process.env.DOMAIN_NAME_2);
+// const envPath = path.resolve(__dirname, '.env');
+// const envVariables = fs.readFileSync(envPath, 'utf-8').split('\n');
+// envVariables.forEach(variable => {
+//   const [key, value] = variable.split('=');
+//   if (key && value) {
+//     process.env[key] = value;
+//   }
+// });
+
 const corsConfig = {
-  origin: ['http://localhost:3000', 'http://192.168.100.6:3000'],
-  // origin: '*',
+  // origin: [process.env.DOMAIN_NAME_1],
+  origin: ["https://ami-attendance-app.onrender.com"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
@@ -55,7 +53,8 @@ sequelize.sync().then(res => {
         app.listen(8080);
         console.log("Running locally!");
     } else {
-      console.log("Running on Vercel");
+      app.listen(5000);
+      console.log("Running on Render!");
     }
 }).catch(err => {
     console.log("Failed to connect ", err);
