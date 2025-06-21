@@ -1,0 +1,64 @@
+const express = require("express");
+const cors = require("cors");
+const fs = require('fs');
+const path = require('path')
+const cookieParser = require('cookie-parser');
+
+const app = express();
+const sequelize = require("./database/database");
+const userRoutes = require("./api/users");
+const authorisationRoute = require("./api/authorisation");
+const studentRoutes = require("./api/student");
+const classRoutes = require("./api/class");
+const attendanceRoutes = require("./api/attendance");
+
+app.use(express.urlencoded({ extended: true }));
+
+// Read and parse the .env file
+const envPath = path.resolve(__dirname, '.env');
+const envVariables = fs.readFileSync(envPath, 'utf-8').split('\n');
+envVariables.forEach(variable => {
+  const [key, value] = variable.split('=');
+  if (key && value) {
+    process.env[key] = value;
+  }
+});
+const origins = [];
+origins.push(process.env.DOMAIN_NAME_1);
+origins.push(process.env.DOMAIN_NAME_2);
+const corsConfig = {
+  origin: ['http://localhost:3000', 'http://192.168.100.6:3000'],
+  // origin: '*',
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+};
+
+
+app.use(cors(corsConfig))
+app.use(express.json())
+app.use(cookieParser())
+
+
+
+app.use(userRoutes);
+
+app.use(authorisationRoute);
+
+app.use(studentRoutes);
+app.use(classRoutes);
+app.use(attendanceRoutes);
+
+
+sequelize.sync().then(res => {
+    console.log("Connected successfully");
+    if(process.env.ENV === "DEVELOPMENT") {
+        app.listen(8080);
+        console.log("Running locally!");
+    } else {
+      console.log("Running on Vercel");
+    }
+}).catch(err => {
+    console.log("Failed to connect ", err);
+})
+
+module.exports = app;
