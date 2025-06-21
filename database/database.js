@@ -17,7 +17,9 @@ envVariables.forEach(variable => {
 // })
 
 const password = "Soccer2694!";
-const sequelize = new Sequelize(`postgresql://postgres:${password}@db.dnlovomafvdwfktabpye.supabase.co:5432/postgres`)
+// normal connection URI
+// const sequelize = new Sequelize(`postgresql://postgres:${password}@db.dnlovomafvdwfktabpye.supabase.co:5432/postgres`)
+const sequelize = new Sequelize(`postgresql://postgres.dnlovomafvdwfktabpye:${password}@aws-0-ap-south-1.pooler.supabase.com:5432/postgres`)
 
 
 module.exports = sequelize;
